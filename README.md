@@ -14,16 +14,16 @@ A modern web application for managing employee leave requests built with ASP.NET
 ## 🖼️ Screenshots
 
 ### Home Page - Leave Request Form
-![Home Page](https://via.placeholder.com/800x400/007bff/ffffff?text=Home+Page+-+Leave+Request+Form)
+![Home Page](screenshots/home-page.png)
 
 ### Admin Dashboard
-![Admin Dashboard](https://via.placeholder.com/800x400/28a745/ffffff?text=Admin+Dashboard)
+![Admin Dashboard](screenshots/admin-dashboard.png)
 
 ### Request Tracking Page
-![Tracking Page](https://via.placeholder.com/800x400/ffc107/000000?text=Request+Tracking+Page)
+![Tracking Page](screenshots/tracking-page.png)
 
 ### Login Page
-![Login Page](https://via.placeholder.com/800x400/6c757d/ffffff?text=Login+Page)
+![Login Page](screenshots/login-page.png)
 
 ## 🚀 Quick Start
 
