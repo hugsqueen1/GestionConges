@@ -1,0 +1,117 @@
+@page
+@model DashboardAdminModel
+@{
+    ViewData["Title"] = "Dashboard RH";
+}
+
+<h1 class="mb-4">Dashboard RH</h1>
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-bg-primary mb-3 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total demandes</h5>
+                <p class="display-6">@Model.TotalDemandes</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-warning mb-3 text-center">
+            <div class="card-body">
+                <h5 class="card-title">En attente</h5>
+                <p class="display-6">@Model.EnAttente</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-success mb-3 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Validées</h5>
+                <p class="display-6">@Model.Validees</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-danger mb-3 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Refusées/Annulées</h5>
+                <p class="display-6">@(Model.Refusees + Model.Annulees)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Liste des demandes</h2>
+<form method="post" asp-page-handler="DownloadCsv" class="row g-2 mb-3">
+    <div class="col-auto">
+        <select name="statut" class="form-select">
+            <option value="Tous">Tous les statuts</option>
+            <option value="EnAttente">En attente</option>
+            <option value="Validee">Validée</option>
+            <option value="Refusee">Refusée</option>
+            <option value="Annulee">Annulée</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">Télécharger CSV</button>
+    </div>
+</form>
+<table class="table table-hover table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Nom</th>
+            <th>Poste</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Statut</th>
+            <th>Code de suivi</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var conge in Model.Conges)
+    {
+        <tr>
+            <td>@conge.NomEmploye</td>
+            <td>@conge.PosteEmploye</td>
+            <td>@conge.DateDebut.ToString("dd/MM/yyyy")</td>
+            <td>@conge.DateFin.ToString("dd/MM/yyyy")</td>
+            <td>
+                @if (conge.Statut == StatutConge.EnAttente)
+                {
+                    <span class="badge bg-warning text-dark">En attente</span>
+                }
+                else if (conge.Statut == StatutConge.Validee)
+                {
+                    <span class="badge bg-success">Validée</span>
+                }
+                else if (conge.Statut == StatutConge.Refusee)
+                {
+                    <span class="badge bg-danger">Refusée</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Annulée</span>
+                }
+            </td>
+            <td>@conge.CodeSuivi</td>
+            <td>
+                @if (conge.Statut == StatutConge.EnAttente)
+                {
+                    <form method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@conge.Id" />
+                        <button type="submit" asp-page-handler="Valider" class="btn btn-success btn-sm">Valider</button>
+                    </form>
+                    <form method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@conge.Id" />
+                        <button type="submit" asp-page-handler="Refuser" class="btn btn-danger btn-sm">Refuser</button>
+                    </form>
+                }
+                <form method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@conge.Id" />
+                    <button type="submit" asp-page-handler="Supprimer" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table> 

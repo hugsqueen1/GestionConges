@@ -1,0 +1,75 @@
+@page
+@model SuiviModel
+@{
+    ViewData["Title"] = "Suivre ma demande";
+}
+
+<h1>Suivre ma demande de congé</h1>
+
+<form method="post" class="mb-4">
+    <div class="input-group">
+        <input asp-for="CodeSuivi" class="form-control" placeholder="Entrez votre code de suivi" />
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </div>
+    <span asp-validation-for="CodeSuivi" class="text-danger"></span>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-info">@Model.Message</div>
+}
+
+@if (Model.CongeTrouve != null)
+{
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Demande de congé</h5>
+            <p><strong>Nom :</strong> @Model.CongeTrouve.NomEmploye</p>
+            <p><strong>Poste :</strong> @Model.CongeTrouve.PosteEmploye</p>
+            <p><strong>Date de début :</strong> @Model.CongeTrouve.DateDebut.ToString("dd/MM/yyyy")</p>
+            <p><strong>Date de fin :</strong> @Model.CongeTrouve.DateFin.ToString("dd/MM/yyyy")</p>
+            <p><strong>Statut :</strong> 
+                @if (Model.CongeTrouve.Annule)
+                {
+                    <span class="badge bg-secondary">Annulé</span>
+                }
+                else if (Model.CongeTrouve.Statut == StatutConge.EnAttente)
+                {
+                    <span class="badge bg-warning">En attente</span>
+                }
+                else if (Model.CongeTrouve.Statut == StatutConge.Validee)
+                {
+                    <span class="badge bg-success">Validé</span>
+                }
+                else if (Model.CongeTrouve.Statut == StatutConge.Refusee)
+                {
+                    <span class="badge bg-danger">Refusé</span>
+                }
+            </p>
+            @if (Model.CongeTrouve.Statut == StatutConge.EnAttente)
+            {
+                <form method="post">
+                    <input type="hidden" name="CodeSuivi" value="@Model.CongeTrouve.CodeSuivi" />
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label">Date de début</label>
+                            <input name="dateDebut" type="date" class="form-control" value="@Model.CongeTrouve.DateDebut.ToString("yyyy-MM-dd")" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date de fin</label>
+                            <input name="dateFin" type="date" class="form-control" value="@Model.CongeTrouve.DateFin.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" asp-page-handler="Modifier" class="btn btn-warning">Modifier</button>
+                            <button type="submit" asp-page-handler="Annuler" class="btn btn-danger ms-2">Annuler</button>
+                        </div>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} 
